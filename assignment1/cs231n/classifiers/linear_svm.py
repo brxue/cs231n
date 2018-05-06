@@ -81,9 +81,9 @@ def svm_loss_vectorized(W, X, y, reg):
   num_train = X.shape[0]
   num_classes = W.shape[1]
   scores = X.dot(W)
-  correct_class_scores = scores[range(num_train), list(y)].reshape(-1,1) #(N, 1)
+  correct_class_scores = scores[np.arange(num_train), y].reshape(-1,1) #(N, 1)
   margins = np.maximum(0, scores - correct_class_scores +1)
-  margins[range(num_train), list(y)] = 0
+  margins[np.arange(num_train), y] = 0
   loss = np.sum(margins) / num_train + 0.5 * reg * np.sum(W * W)  
   #############################################################################
   #                             END OF YOUR CODE                              #
@@ -101,8 +101,8 @@ def svm_loss_vectorized(W, X, y, reg):
   #############################################################################
   coeff_mat = np.zeros((num_train, num_classes))
   coeff_mat[margins > 0] = 1
-  coeff_mat[range(num_train), list(y)] = 0
-  coeff_mat[range(num_train), list(y)] = -np.sum(coeff_mat, axis=1)
+  coeff_mat[np.arange(num_train), y] = 0
+  coeff_mat[np.arange(num_train), y] = -np.sum(coeff_mat, axis=1)
 
   dW = (X.T).dot(coeff_mat)
   dW = dW/num_train + reg*W  
